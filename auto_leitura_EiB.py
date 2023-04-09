@@ -2,18 +2,16 @@
 
 from time import sleep
 from py_rpautom import web_utils as webutils
+from py_rpautom.python_utils import cls
 import os
 
-
-def cls():
-    import os
-    os.system("cls")
-
-
-os.environ["WDM_SSL_VERIFY"] = "0"
-senha_usuario = os.getenv('senha_curso_eib')
-
-
+##### Área de configuração #####
+senha_curso_eib = os.getenv('senha_curso_eib')
+email_curso_eib = os.getenv('email_curso_eib')
+numero_modulo = 1
+numero_menu_inicial = 6
+numero_menu_final = 6
+numero_item_extra = 1
 url = "https://curso.englishinbrazil.com.br/"
 
 
@@ -32,50 +30,55 @@ try:
     campo_email = "//input[@placeholder='Email']"
     campo_senha = "//input[@placeholder='Senha']"
     botao_entrar = "//button[@type='submit']"
-    email = "techall@hotmail.com.br"
 
-    try:
-        validacao_campo_email = ''
-        while validacao_campo_email == '':
-            webutils.escrever_em_elemento(
-                seletor=campo_email, texto=email, tipo_elemento="xpath"
-            )
-            sleep(1)
-            validacao_campo_email = webutils.coletar_atributo(
-                campo_email,
-                'value',
-                tipo_elemento='xpath',
-            )
-
+    validacao_campo_email = ''
+    while validacao_campo_email == '':
         webutils.escrever_em_elemento(
-            campo_senha, texto=senha_usuario, tipo_elemento="xpath"
+            seletor=campo_email,
+            texto=email_curso_eib,
+            tipo_elemento="xpath",
         )
-        webutils.aguardar_elemento(
-            identificador=botao_entrar, tipo_elemento="xpath"
+        sleep(1)
+        validacao_campo_email = webutils.coletar_atributo(
+            campo_email,
+            'value',
+            tipo_elemento='xpath',
         )
-        webutils.clicar_elemento(botao_entrar, tipo_elemento="xpath")
-    except Exception as erro:
-        print(erro)
-        breakpoint()
 
-    caminho_modulo = "(//div[@class='moduloCurso'])[1]"
+    webutils.escrever_em_elemento(
+        campo_senha,
+        texto=senha_curso_eib,
+        tipo_elemento="xpath",
+    )
+    webutils.aguardar_elemento(
+        identificador=botao_entrar,
+        tipo_elemento="xpath",
+    )
+    webutils.clicar_elemento(
+        botao_entrar,
+        tipo_elemento="xpath",
+    )
+
+    caminho_modulo = f"(//div[@class='moduloCurso'])[{str(numero_modulo)}]"
     validacao_modulo = False
     while validacao_modulo is False:
         validacao_modulo = webutils.aguardar_elemento(
-            identificador=caminho_modulo, tipo_elemento="xpath"
+            identificador=caminho_modulo,
+            tipo_elemento="xpath",
         )
-    webutils.clicar_elemento(caminho_modulo, tipo_elemento="xpath")
+    webutils.clicar_elemento(
+        caminho_modulo,
+        tipo_elemento="xpath",
+    )
 
     menu_hamburguer = "(//div[@class='ant-col'])[1]"
     validacao_menu_hamburguer = False
     while validacao_menu_hamburguer is False:
         validacao_menu_hamburguer = webutils.aguardar_elemento(
-            identificador=menu_hamburguer, tipo_elemento="xpath"
+            identificador=menu_hamburguer,
+            tipo_elemento="xpath",
         )
 
-    numero_menu_inicial = 6
-    numero_menu_final = 6
-    numero_item_extra = 1
     for item in range(numero_menu_inicial, numero_menu_final + 1):
         try:
             if item == 8:
@@ -86,7 +89,10 @@ try:
             cls()
             print("Estamos exibindo o ítem {} do menu".format(item))
 
-            webutils.clicar_elemento(menu_hamburguer, tipo_elemento="xpath")
+            webutils.clicar_elemento(
+                menu_hamburguer,
+                tipo_elemento="xpath",
+            )
 
             numero_item_menu = item
             caminho_menu = (
@@ -98,9 +104,13 @@ try:
             validacao_caminho_menu = False
             while validacao_caminho_menu is False:
                 validacao_caminho_menu = webutils.aguardar_elemento(
-                    identificador=caminho_menu, tipo_elemento="xpath"
+                    identificador=caminho_menu,
+                    tipo_elemento="xpath",
                 )
-            webutils.clicar_elemento(caminho_menu, tipo_elemento="xpath")
+            webutils.clicar_elemento(
+                caminho_menu,
+                tipo_elemento="xpath",
+            )
 
             validacao_caminho_infobox = False
             while validacao_caminho_infobox is False:
@@ -109,16 +119,19 @@ try:
                     tipo_elemento="xpath"
                 )
             webutils.clicar_elemento(
-                f"{caminho_menu}{caminho_infobox}", tipo_elemento="xpath"
+                f"{caminho_menu}{caminho_infobox}",
+                tipo_elemento="xpath"
             )
 
             linha = 1
             quantidade_linhas = "//tbody/tr"
             resultado_quantidade_linhas = webutils.aguardar_elemento(
-                identificador=quantidade_linhas, tipo_elemento="xpath"
+                identificador=quantidade_linhas,
+                tipo_elemento="xpath",
             )
             resultado_quantidade_linhas = webutils.contar_elementos(
-                quantidade_linhas, tipo_elemento="xpath"
+                quantidade_linhas,
+                tipo_elemento="xpath",
             )
 
             for linha in range(1, resultado_quantidade_linhas+1):
@@ -126,12 +139,14 @@ try:
 
                 elemento_palavra = f"(//tbody/tr/td[2])[{str(linha)}]"
                 palavra = webutils.extrair_texto(
-                    seletor=elemento_palavra, tipo_elemento='xpath'
+                    seletor=elemento_palavra,
+                    tipo_elemento='xpath',
                 )
 
                 elemento_traducao = f"(//tbody/tr/td[3])[{str(linha)}]"
                 traducao = webutils.extrair_texto(
-                    seletor=elemento_traducao, tipo_elemento='xpath'
+                    seletor=elemento_traducao,
+                    tipo_elemento='xpath',
                 )
 
                 tamanho_palavra = len(palavra)
@@ -147,7 +162,10 @@ try:
                 )
 
                 botao_play = f"(//tbody/tr/td/div/div/div/span/i)[{str(linha)}]"
-                webutils.clicar_elemento(botao_play, tipo_elemento="xpath")
+                webutils.clicar_elemento(
+                    botao_play,
+                    tipo_elemento="xpath",
+                )
 
                 sleep(temporizador)
         except Exception as errinho:
@@ -171,6 +189,9 @@ try:
                         tempo=0.5,
                     )
 except Exception as erro:
+    print('Valor de contexto:', erro.__context__)
+    print('Número da linha com problema:', erro.__traceback__.tb_lineno)
+    print('Mensagem do erro:', erro)
     breakpoint()
 finally:
     webutils.encerrar_navegador()
