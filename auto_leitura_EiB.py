@@ -134,13 +134,17 @@ try:
                     seletor=elemento_traducao, tipo_elemento='xpath'
                 )
 
-                print(
-                    f"linha: {linha} - English: {palavra} - Português: {traducao}")
-
                 tamanho_palavra = len(palavra)
                 if tamanho_palavra > 6:
                     contador_adicional = tamanho_palavra - 6
                     temporizador = temporizador + contador_adicional
+
+                print(
+                    f"linha: {linha} -",
+                    f" English: {palavra} -",
+                    f" Português: {traducao} -"
+                    f" Próxima palavra em: {temporizador} segundo(s)."
+                )
 
                 botao_play = f"(//tbody/tr/td/div/div/div/span/i)[{str(linha)}]"
                 webutils.clicar_elemento(botao_play, tipo_elemento="xpath")
