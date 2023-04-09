@@ -1,1 +1,3 @@
 # auto_leitura_eib
+
+Este repositório armazena um script pessoal que me ajuda no estudo de Inglês. O script é um facilitador para interação nos botões de play do modo de leitura das palavras no curso English in Brazil da Carina Fragoso. Se trata de uma automaçao web e não tem pretenção alguma de ser uma automação profissional, ou mesmo de estudo de como fazer automações, somente me ajudar a clicar nos vários botões de play da página. ``Também não tenho intenção de prejudicar, como forçar o servidor, fazer DDoS ou em qualquer nível, o site ou a proprietária dele. Muito pelo contrário, É somente uma maneira de me ajuda a evoluir nesse curso tão maravilhoso usando os conhecimentos de tecnologia que possuo.``
