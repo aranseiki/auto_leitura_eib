@@ -73,8 +73,8 @@ try:
             identificador=menu_hamburguer, tipo_elemento="xpath"
         )
 
-    numero_menu_inicial = 5
-    numero_menu_final = 5
+    numero_menu_inicial = 6
+    numero_menu_final = 6
     numero_item_extra = 1
     for item in range(numero_menu_inicial, numero_menu_final + 1):
         try:
@@ -84,7 +84,7 @@ try:
                 numero_item_extra = 3
 
             cls()
-            print("Estamos exibindo o ítem {} do menu".format(item))
+            print("Estamos exibindo o Ã­tem {} do menu".format(item))
 
             webutils.clicar_elemento(menu_hamburguer, tipo_elemento="xpath")
 
@@ -135,7 +135,7 @@ try:
                 )
 
                 print(
-                    f"linha: {linha} - English: {palavra} - Português: {traducao}")
+                    f"linha: {linha} - English: {palavra} - PortuguÃªs: {traducao}")
 
                 tamanho_palavra = len(palavra)
                 if tamanho_palavra > 6:
