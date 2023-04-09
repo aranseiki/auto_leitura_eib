@@ -84,7 +84,7 @@ try:
                 numero_item_extra = 3
 
             cls()
-            print("Estamos exibindo o ï¿½tem {} do menu".format(item))
+            print("Estamos exibindo o ítem {} do menu".format(item))
 
             webutils.clicar_elemento(menu_hamburguer, tipo_elemento="xpath")
 
@@ -135,7 +135,7 @@ try:
                 )
 
                 print(
-                    f"linha: {linha} - English: {palavra} - Portuguï¿½s: {traducao}")
+                    f"linha: {linha} - English: {palavra} - Português: {traducao}")
 
                 tamanho_palavra = len(palavra)
                 if tamanho_palavra > 6:
