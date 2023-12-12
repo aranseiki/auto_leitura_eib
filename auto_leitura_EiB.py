@@ -8,12 +8,17 @@ import os
 ##### Área de configuração #####
 senha_curso_eib = os.getenv('senha_curso_eib')
 email_curso_eib = os.getenv('email_curso_eib')
-numero_modulo = 1
-numero_menu_inicial = 6
-numero_menu_final = 6
+numero_modulo = 2
+numero_menu_inicial = 7
+numero_menu_final = 7
 numero_item_extra = 1
 url = "https://curso.englishinbrazil.com.br/"
-
+lista_abas_conteudo = [
+    'VOCABULARY',
+    'GRAMMAR',
+    'USEFUL PHRASES',
+    'CULTURAL NOTE',
+]
 
 webutils.iniciar_navegador(
     nome_navegador="edge",
@@ -89,6 +94,10 @@ try:
             cls()
             print("Estamos exibindo o ítem {} do menu".format(item))
 
+            webutils.aguardar_elemento(
+                identificador=menu_hamburguer,
+                tipo_elemento="xpath",
+            )
             webutils.clicar_elemento(
                 menu_hamburguer,
                 tipo_elemento="xpath",
@@ -123,51 +132,78 @@ try:
                 tipo_elemento="xpath"
             )
 
-            linha = 1
-            quantidade_linhas = "//tbody/tr"
-            resultado_quantidade_linhas = webutils.aguardar_elemento(
-                identificador=quantidade_linhas,
-                tipo_elemento="xpath",
-            )
-            resultado_quantidade_linhas = webutils.contar_elementos(
-                quantidade_linhas,
-                tipo_elemento="xpath",
-            )
-
-            for linha in range(1, resultado_quantidade_linhas+1):
-                temporizador = 2.5
-
-                elemento_palavra = f"(//tbody/tr/td[2])[{str(linha)}]"
-                palavra = webutils.extrair_texto(
-                    seletor=elemento_palavra,
-                    tipo_elemento='xpath',
+            for aba_conteudo in lista_abas_conteudo:
+                print('\n', 'Conteúdo sendo lido agora:', aba_conteudo)
+                webutils.aguardar_elemento(
+                    identificador=f'//span[text()="{aba_conteudo}"]/parent::button',
+                    tipo_elemento="xpath"
                 )
-
-                elemento_traducao = f"(//tbody/tr/td[3])[{str(linha)}]"
-                traducao = webutils.extrair_texto(
-                    seletor=elemento_traducao,
-                    tipo_elemento='xpath',
-                )
-
-                tamanho_palavra = len(palavra)
-                if tamanho_palavra > 6:
-                    contador_adicional = tamanho_palavra - 6
-                    temporizador = temporizador + contador_adicional
-
-                print(
-                    f"linha: {linha} -",
-                    f" English: {palavra} -",
-                    f" Português: {traducao} -"
-                    f" Próxima palavra em: {temporizador} segundo(s)."
-                )
-
-                botao_play = f"(//tbody/tr/td/div/div/div/span/i)[{str(linha)}]"
                 webutils.clicar_elemento(
-                    botao_play,
+                    seletor=f'//span[text()="{aba_conteudo}"]/parent::button',
+                    tipo_elemento="xpath"
+                )
+
+                if aba_conteudo.upper() == 'VOCABULARY':
+                    numero_tabela_atual = '1'
+                elif aba_conteudo.upper() == 'GRAMMAR':
+                    # breakpoint()
+                    continue
+                elif aba_conteudo.upper() == 'USEFUL PHRASES':
+                    numero_tabela_atual = '2'
+                elif aba_conteudo.upper() == 'CULTURAL NOTE':
+                    numero_tabela_atual = '3'
+
+                linha = 1
+                quantidade_linhas = f'(//table)[{numero_tabela_atual}]/tbody/tr'
+                resultado_quantidade_linhas = webutils.aguardar_elemento(
+                    identificador=quantidade_linhas,
+                    tipo_elemento="xpath",
+                )
+                resultado_quantidade_linhas = webutils.contar_elementos(
+                    quantidade_linhas,
                     tipo_elemento="xpath",
                 )
 
-                sleep(temporizador)
+                elemento_palavra_padrao = f'((//table)[{numero_tabela_atual}]/tbody/tr/td[2])[#linha]'
+                
+                elemento_traducao_padrao = f'((//table)[{numero_tabela_atual}]/tbody/tr/td[3])[#linha]'
+
+                botao_play_padrao = f"((//table)[{numero_tabela_atual}]/tbody/tr/td/div/div/div/span/i)[#linha]"
+
+                for linha in range(1, resultado_quantidade_linhas+1):
+                    temporizador = 2.5
+                    elemento_palavra = elemento_palavra_padrao.replace('#linha', str(linha))
+                    elemento_traducao = elemento_traducao_padrao.replace('#linha', str(linha))
+                    botao_play = botao_play_padrao.replace('#linha', str(linha))
+                    
+                    palavra = webutils.extrair_texto(
+                        seletor=elemento_palavra,
+                        tipo_elemento='xpath',
+                    )
+                    
+                    traducao = webutils.extrair_texto(
+                        seletor=elemento_traducao,
+                        tipo_elemento='xpath',
+                    )
+
+                    tamanho_palavra = len(palavra)
+                    if tamanho_palavra > 6:
+                        contador_adicional = tamanho_palavra - 6
+                        temporizador = temporizador + contador_adicional
+
+                    print(
+                        f"linha: {linha} -",
+                        f"English: {palavra.strip()} -",
+                        f"Português: {traducao.strip()} -",
+                        f"Próxima palavra em: {temporizador} segundo(s)."
+                    )
+
+                    webutils.clicar_elemento(
+                        botao_play,
+                        tipo_elemento="xpath",
+                    )
+
+                    sleep(temporizador)
         except Exception as errinho:
             print(errinho)
         finally:
